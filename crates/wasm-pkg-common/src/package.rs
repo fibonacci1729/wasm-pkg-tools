@@ -63,10 +63,20 @@ impl FromStr for PackageRef {
 }
 
 /// A package spec combines a [`PackageRef`] with an optional version.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct PackageSpec {
     pub package: PackageRef,
     pub version: Option<Version>,
+}
+
+impl std::fmt::Display for PackageSpec {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.package)?;
+        if let Some(version) = self.version.as_ref() {
+            write!(f, "@{}", version)?;
+        }
+        Ok(())
+    }
 }
 
 impl FromStr for PackageSpec {
